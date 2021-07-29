@@ -9,13 +9,14 @@ import { fetcher, imageUpload, patchEvent, postEvent } from "lib";
 import { ImageInput, DateInput, TextInput, TimeInput } from "components";
 import { useTranslations } from "next-intl";
 
-const EventForm = () => {
+const EventForm = ({id}) => {
   const t = useTranslations("EventForm");
 
   const {
     push,
-    query: { id },
+    //query: { id },
   } = useRouter();
+  
 
   const [savedPicture, setSavedPicture] = useState();
   const [newPicture, setNewPicture] = useState();
@@ -105,7 +106,8 @@ const EventForm = () => {
     >
       {({ handleSubmit, isSubmitting, setFieldValue }) => {
         useEffect(async () => {
-          if (!isAddMode) {
+          console.log({isAddMode, id});
+          if (!isAddMode) {            
             const event = await fetcher(`http://localhost:8000/events/${id}`);
 
             setHasEndDate(!!event.end);
@@ -117,7 +119,7 @@ const EventForm = () => {
               endDate: event?.end ? new Date(event.end) : "",
               endTime: event?.end ? new Date(event.end) : "",
             };
-            setSavedPicture(event.picture);
+            setSavedPicture(event.picture);            
             Object.keys(initialValues).forEach((field) =>
               setFieldValue(field, fieldValues[field], false)
             );

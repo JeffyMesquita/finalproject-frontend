@@ -14,9 +14,10 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ locale }) {
+export async function getStaticProps({ locale, params }) {
   return {
     props: {
+      id: params.id,
       messages: {
         ...require(`messages/shared/${locale}.json`),
         ...require(`messages/events/${locale}.json`),
