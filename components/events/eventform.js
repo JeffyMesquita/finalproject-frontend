@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import Router from "next/router";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import { Button } from "@chakra-ui/button";
@@ -9,14 +9,8 @@ import { fetcher, imageUpload, patchEvent, postEvent } from "lib";
 import { ImageInput, DateInput, TextInput, TimeInput } from "components";
 import { useTranslations } from "next-intl";
 
-const EventForm = ({id}) => {
+const EventForm = ({ id }) => {
   const t = useTranslations("EventForm");
-
-  const {
-    push,
-    //query: { id },
-  } = useRouter();
-  
 
   const [savedPicture, setSavedPicture] = useState();
   const [newPicture, setNewPicture] = useState();
@@ -90,7 +84,7 @@ const EventForm = ({id}) => {
     setSubmitting(false);
 
     ok
-      ? push(`/events/${json.id}`)
+      ? Router.push(`/events/${json.id}`)
       : setInfo(
           typeof json === "string"
             ? json
@@ -106,8 +100,8 @@ const EventForm = ({id}) => {
     >
       {({ handleSubmit, isSubmitting, setFieldValue }) => {
         useEffect(async () => {
-          console.log({isAddMode, id});
-          if (!isAddMode) {            
+          console.log({ isAddMode, id });
+          if (!isAddMode) {
             const event = await fetcher(`http://localhost:8000/events/${id}`);
 
             setHasEndDate(!!event.end);
@@ -119,7 +113,7 @@ const EventForm = ({id}) => {
               endDate: event?.end ? new Date(event.end) : "",
               endTime: event?.end ? new Date(event.end) : "",
             };
-            setSavedPicture(event.picture);            
+            setSavedPicture(event.picture);
             Object.keys(initialValues).forEach((field) =>
               setFieldValue(field, fieldValues[field], false)
             );
